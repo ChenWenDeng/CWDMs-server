@@ -7,6 +7,7 @@ var productSchema = new Schema({
 	"salePrice":Number,
     "productImage":String,
     "direction":String,
+	"createDate":String,
     "typeName": Array,
     "details":[
         {

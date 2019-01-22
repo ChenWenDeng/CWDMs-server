@@ -3,6 +3,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var goods = require('../models/goods');
 
+require('./../util/util');
+
 //连接数据库
 mongoose.connect('mongodb://127.0.0.1:27017/eend');
 
@@ -124,6 +126,73 @@ router.post("/searchGoods",function(req,res,next){
 		}
 	})
 	
+})
+
+
+//添加商品
+router.post("/addGoods",function(req,res,next){
+	if(req.body.productName){
+		let productName = req.body.productName
+		let salePrice = req.body.salePrice
+		let direction = req.body.direction
+		var fileList1 = req.body.fileList1
+		var fileList2 = req.body.fileList2
+		var fileList3 = req.body.fileList3
+// 		console.log('productName==='+productName)
+// 		console.log('salePrice==='+salePrice)
+// 		console.log('direction==='+direction)
+// 		console.log(fileList1)
+// 		console.log(fileList2)
+// 		console.log(fileList3)
+		
+		var platform = '588';
+		var r1 = Math.floor(Math.random()*10)
+		var r2 = Math.floor(Math.random()*10)
+		
+		var sysDate = new Date().Format('yyyyMMddhhmmss');
+		var createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+		var productId = platform + r1 + sysDate + r2;
+		
+		var smImg=[];
+		
+		let detailsImagebag=[];
+
+		for(var i=0; i<5;i++){
+			smImg.push(fileList2[i].url)
+			detailsImagebag.push(fileList3[i].url)
+		}
+		
+		let object = {
+			productId : productId,
+			productName : productName,
+			salePrice : salePrice,
+			num : 1,
+			smImg:smImg,
+			detailsImagebag:detailsImagebag
+		}
+
+		let details=[];
+
+		details.push(object)
+
+		let obj = {
+			productId : productId,
+			productName : productName,
+			salePrice : salePrice,
+			direction : direction,
+			productImage:fileList1[0].url,
+			createDate : createDate,
+			details:details
+		}
+		console.log(obj)
+		
+		goods.create(obj)
+		res.json({
+			status: '0',
+			msg: '',
+			result:'suc'
+		})
+	}
 })
 
 module.exports = router;
