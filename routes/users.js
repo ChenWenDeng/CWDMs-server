@@ -14,6 +14,7 @@ router.post('/userList',function(req,res,next){
 	let page        = req.body.page;
 	let pageSize    = req.body.pageSize;
 	let skip        = (page-1) * pageSize;
+	let sort = -1 ;
 	let usersCount = 0;//搜索商品总数
 	console.log('page==='+page);
 	console.log('pageSize==='+pageSize);
@@ -27,7 +28,7 @@ router.post('/userList',function(req,res,next){
 		} else {
 			usersCount = doc.length;
 			if(doc){
-				usersList.skip(skip).limit(pageSize).exec(function(err1,doc1){
+				usersList.skip(skip).limit(pageSize).sort({'createDate':sort}).exec(function(err1,doc1){
 					if(err1){
 						res.json({
 							status: '1',
@@ -54,6 +55,7 @@ router.post("/searchUser",function(req,res,next){
 	let page        = req.body.page;
 	let pageSize    = req.body.pageSize;
 	let skip        = (page-1) * pageSize;
+	let sort = -1 ;
 	let searchCount=0;//搜索商品总数
 	console.log(userName);
 	console.log(page);
@@ -75,7 +77,7 @@ router.post("/searchUser",function(req,res,next){
 			searchCount = doc.length;
 			console.log('searchCount==='+searchCount)
 			if(doc){
-				searchGoods.skip(skip).limit(pageSize).exec(function(err1,doc1){
+				searchGoods.skip(skip).limit(pageSize).sort({'createDate':sort}).exec(function(err1,doc1){
 					if(err1){
 						res.json({
 							status: '1',

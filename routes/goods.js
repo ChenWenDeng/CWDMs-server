@@ -20,11 +20,13 @@ mongoose.connection.on("disconnected",function(){
     console.log("后台管理系统与数据库断开连接");
 })
 
+
 //商品列表接口
 router.post('/',function(req,res,next){
 	let page = req.body.page;
 	let pageSize = req.body.pageSize;
 	let skip = (page-1) * pageSize;
+	let sort = -1 ;
 	let params = {};
 	
 	let tatolCount = 0; //商品列表总数量
@@ -39,7 +41,7 @@ router.post('/',function(req,res,next){
 		}
 	})
 	
-	let goodsModel = goods.find(params).skip(skip).limit(pageSize);
+	let goodsModel = goods.find(params).skip(skip).limit(pageSize).sort({'createDate':sort});
 	goodsModel.exec(function(err,doc){
 		if(err){
 			res.json({
@@ -57,6 +59,45 @@ router.post('/',function(req,res,next){
 		}
 	})
 })
+
+
+// //商品列表接口
+// router.post('/',function(req,res,next){
+// 	let page = req.body.page;
+// 	let pageSize = req.body.pageSize;
+// 	let skip = (page-1) * pageSize;
+// 	let params = {};
+// 	
+// 	let tatolCount = 0; //商品列表总数量
+// 	goods.find({},function(err1,doc1){
+// 		if(err1){
+// 			res.json({
+// 				status: '1',
+// 				msg: err1.message
+// 			})
+// 		}else{
+// 			tatolCount=doc1.length
+// 		}
+// 	})
+// 	
+// 	let goodsModel = goods.find(params).skip(skip).limit(pageSize);
+// 	goodsModel.exec(function(err,doc){
+// 		if(err){
+// 			res.json({
+// 				status: '1',
+// 				msg: err.message
+// 			})
+// 		}else{
+// 			res.json({
+// 				status: '0',
+// 				msg: '',
+// 				tatolCount:tatolCount,
+// 				count: doc.length,
+// 				list:doc,
+// 			})
+// 		}
+// 	})
+// })
 
 //删除商品接口
 router.post("/delGoods",function(req,res,next){
@@ -130,11 +171,26 @@ router.post("/searchGoods",function(req,res,next){
 
 
 //添加商品
+router.post("/test",function(req,res,next){
+	res.json({
+		status: '0',
+		msg: '',
+		result:'scu'
+	})
+})
+
+
+//添加商品
 router.post("/addGoods",function(req,res,next){
 	if(req.body.productName){
 		let productName = req.body.productName
 		let salePrice = req.body.salePrice
 		let direction = req.body.direction
+		
+		let coloursStr = req.body.colours
+		let sizesStr = req.body.sizes
+		let searchTextStr = req.body.searchText
+		
 		var fileList1 = req.body.fileList1
 		var fileList2 = req.body.fileList2
 		var fileList3 = req.body.fileList3
@@ -156,9 +212,20 @@ router.post("/addGoods",function(req,res,next){
 		var smImg=[];
 		
 		let detailsImagebag=[];
+		
+		let colours = [];
+		let sizes   = [];
+		let typeName= [];
+		
+		colours  = coloursStr.split("，");
+		sizes 	 = sizesStr.split(",");
+		typeName = searchTextStr.split("，");
+		 
 
-		for(var i=0; i<5;i++){
+		for(var i=0; i<fileList2.length;i++){
 			smImg.push(fileList2[i].url)
+		}
+		for(var i=0; i<fileList3.length;i++){
 			detailsImagebag.push(fileList3[i].url)
 		}
 		
@@ -168,7 +235,9 @@ router.post("/addGoods",function(req,res,next){
 			salePrice : salePrice,
 			num : 1,
 			smImg:smImg,
-			detailsImagebag:detailsImagebag
+			detailsImagebag:detailsImagebag,
+			colours:colours,
+			sizes:sizes
 		}
 
 		let details=[];
@@ -182,7 +251,8 @@ router.post("/addGoods",function(req,res,next){
 			direction : direction,
 			productImage:fileList1[0].url,
 			createDate : createDate,
-			details:details
+			details:details,
+			typeName:typeName
 		}
 		console.log(obj)
 		
@@ -194,5 +264,88 @@ router.post("/addGoods",function(req,res,next){
 		})
 	}
 })
+
+
+
+// //添加商品
+// router.post("/addGoods",function(req,res,next){
+// 	if(req.body.productName){
+// 		let productName = req.body.productName
+// 		let salePrice = req.body.salePrice
+// 		let direction = req.body.direction
+// 		
+// 		let coloursStr = req.body.colours
+// 		let sizesStr = req.body.sizes
+// 		
+// 		var fileList1 = req.body.fileList1
+// 		var fileList2 = req.body.fileList2
+// 		var fileList3 = req.body.fileList3
+// // 		console.log('productName==='+productName)
+// // 		console.log('salePrice==='+salePrice)
+// // 		console.log('direction==='+direction)
+// // 		console.log(fileList1)
+// // 		console.log(fileList2)
+// // 		console.log(fileList3)
+// 		
+// 		var platform = '588';
+// 		var r1 = Math.floor(Math.random()*10)
+// 		var r2 = Math.floor(Math.random()*10)
+// 		
+// 		var sysDate = new Date().Format('yyyyMMddhhmmss');
+// 		var createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+// 		var productId = platform + r1 + sysDate + r2;
+// 		
+// 		var smImg=[];
+// 		
+// 		let detailsImagebag=[];
+// 		
+// 		let colours=[];
+// 		let sizes=[];
+// 		
+// 		colours = coloursStr.split(",");
+// 		sizes = sizesStr.split(",");
+// 		 
+// 
+// 		for(var i=0; i<fileList2.length;i++){
+// 			smImg.push(fileList2[i].url)
+// 		}
+// 		for(var i=0; i<fileList3.length;i++){
+// 			detailsImagebag.push(fileList3[i].url)
+// 		}
+// 		
+// 		let object = {
+// 			productId : productId,
+// 			productName : productName,
+// 			salePrice : salePrice,
+// 			num : 1,
+// 			smImg:smImg,
+// 			detailsImagebag:detailsImagebag,
+// 			colours:colours,
+// 			sizes:sizes
+// 		}
+// 
+// 		let details=[];
+// 
+// 		details.push(object)
+// 
+// 		let obj = {
+// 			productId : productId,
+// 			productName : productName,
+// 			salePrice : salePrice,
+// 			direction : direction,
+// 			productImage:fileList1[0].url,
+// 			createDate : createDate,
+// 			details:details
+// 		}
+// 		console.log(obj)
+// 		
+// 		goods.create(obj)
+// 		res.json({
+// 			status: '0',
+// 			msg: '',
+// 			result:'suc'
+// 		})
+// 	}
+// })
 
 module.exports = router;
