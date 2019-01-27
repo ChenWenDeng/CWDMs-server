@@ -61,6 +61,25 @@ router.post('/',function(req,res,next){
 })
 
 
+router.get('/goodsCount',function(req,res,next){
+	let goodsCont = 0;
+	goods.find({},function(err,doc){
+		if(err){
+			res.json({
+				status: '1',
+				msg: err.message
+			})
+		}else{
+			res.json({
+				status: '0',
+				msg: '',
+				goodsCont: doc.length,
+			})
+		}
+	})
+})
+
+
 // //商品列表接口
 // router.post('/',function(req,res,next){
 // 	let page = req.body.page;
