@@ -4,6 +4,8 @@ var router = express.Router();
 // var users = require('../models/users');
 var orders = require('../models/orders');
 
+var dates = require('./../util/time');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -151,33 +153,22 @@ router.get("/orderNum",function(req,res,next){
 	let dayFourOrder=0;
 	let dayFiveOrder=0;
 	let daySixOrder=0;
+
+	let Dates  = new Date().getTime(); 
+  let Dates1 = new Date().getTime()-(1000*60*60*24); 
+  let Dates2 = new Date().getTime()-(1000*60*60*24*2); 
+  let Dates3 = new Date().getTime()-(1000*60*60*24*3); 
+  let Dates4 = new Date().getTime()-(1000*60*60*24*4); 
+  let Dates5 = new Date().getTime()-(1000*60*60*24*5); 
+  let Dates6 = new Date().getTime()-(1000*60*60*24*6);
 	
-	let myDate = new Date();
-	let FullYear = myDate.getFullYear();
-	let Month = (myDate.getMonth()+1);
-	Month = Month <10?'0'+Month:Mosnth;
-	let Dates = myDate.getDate();
-	let Dates1 = myDate.getDate()-1;
-	let Dates2 = myDate.getDate()-2;
-	let Dates3 = myDate.getDate()-3;
-	let Dates4 = myDate.getDate()-4;
-	let Dates5 = myDate.getDate()-5;
-	let Dates6 = myDate.getDate()-6;
-	
-	myDate = FullYear+'-'+Month+'-'+Dates
-	myDate1 = FullYear+'-'+Month+'-'+Dates1
-	myDate2 = FullYear+'-'+Month+'-'+Dates2
-	myDate3 = FullYear+'-'+Month+'-'+Dates3
-	myDate4 = FullYear+'-'+Month+'-'+Dates4
-	myDate5 = FullYear+'-'+Month+'-'+Dates5
-	myDate6 = FullYear+'-'+Month+'-'+Dates6
-	console.log(myDate);
-	console.log(myDate1);
-	console.log(myDate2);
-	console.log(myDate3);
-	console.log(myDate4);
-	console.log(myDate5);
-	console.log(myDate6);
+	let myDate 	= dates.date(Dates)
+	let myDate1 = dates.date(Dates1)
+	let myDate2 = dates.date(Dates2)
+	let myDate3 = dates.date(Dates3)
+	let myDate4 = dates.date(Dates4)
+	let myDate5 = dates.date(Dates5)
+	let myDate6 = dates.date(Dates6)
 	
 	const reg = new RegExp(myDate, 'i')
 	const reg6 = new RegExp(myDate1, 'i')
@@ -319,7 +310,5 @@ router.get("/orderNum",function(req,res,next){
 		}
 	})
 })
-
-
 
 module.exports = router;
