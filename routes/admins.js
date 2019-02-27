@@ -92,4 +92,24 @@ router.post("/logout", function (req, res, next) {
   })
 })
 
+//管理员设置
+router.get("/getAdmin", function (req, res, next) {
+	let adminId = req.cookies.adminId;
+  if (req.cookies.adminId) {
+    admins.findOne({adminId:adminId},function(err,doc){
+			res.json({
+				status: "0",
+				masg: '',
+				result: doc
+			})
+		})
+  } else {
+    res.json({
+      status: '1',
+      msg: '未登录',
+      result: ''
+    })
+  }
+})
+
 module.exports = router;
